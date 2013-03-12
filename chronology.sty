@@ -1,0 +1,84 @@
+\NeedsTeXFormat{LaTeX2e}%
+\ProvidesPackage{chronology}[2010/6/12 v1.0 Horizontal timeline]%
+\RequirePackage{calc}%
+\RequirePackage{tikz}%
+\RequirePackage{ifthen}%
+\newcounter{step}\newcounter{stepstart}\newcounter{stepstop}%
+\newcounter{yearstart}\newcounter{yearstop}\newcounter{deltayears}%
+\newlength{\xstart}\newlength{\xstop}%
+\newlength{\unit}\newlength{\timelinewidth}%
+\newsavebox{\timelinebox}%
+\makeatletter%
+\newif\ifchronology@star%
+\newenvironment{chronology}{%
+	\@ifstar{\chronology@startrue\chronology@i*}{\chronology@starfalse\chronology@i*}%
+}{%
+	\end{tikzpicture}%
+	\end{lrbox}%
+	\raisebox{2ex}{\resizebox{\timelinewidth}{!}{\usebox{\timelinebox}}}%
+}%
+\def\chronology@i*{%
+	\@ifnextchar[{\chronology@ii*}{\chronology@ii*[{5}]}%
+}%
+\def\chronology@ii*[#1]#2#3#4{%
+	\@ifnextchar[{\chronology@iii*[{#1}]{#2}{#3}{#4}}{\chronology@iii*[{#1}]{#2}{#3}{#4}[{#4}]}%
+}%
+\def\chronology@iii*[#1]#2#3#4[#5]{%
+	\newif\ifflipped%
+	\ifchronology@star%
+		\flippedtrue%
+	\else%
+		\flippedfalse%
+	\fi%
+	\setcounter{step}{#1}%
+	\setcounter{yearstart}{#2}\setcounter{yearstop}{#3}%
+	\setcounter{deltayears}{\theyearstop-\theyearstart}%
+	\setlength{\unit}{#5/\thedeltayears}%
+	\setlength{\timelinewidth}{#4}%
+	\pgfmathsetcounter{stepstart}{\theyearstart+\thestep-mod(\theyearstart,\thestep)}%
+	\pgfmathsetcounter{stepstop}{\theyearstop-mod(\theyearstop,\thestep)}%
+	\addtocounter{step}{\thestepstart}%
+	\begin{lrbox}{\timelinebox}%
+		\begin{tikzpicture}[baseline={(current bounding box.north)}]%
+			\draw [|->] (0,0) -- (\thedeltayears*\unit+\unit, 0);%
+			\foreach \x in {1,...,\thedeltayears}%
+				\draw[xshift=\x*\unit] (0,-.1\unit) -- (0,.1\unit);%
+			\addtocounter{deltayears}{1}%
+			\foreach \x in {\thestepstart,\thestep,...,\thestepstop}{%
+				\pgfmathsetlength\xstop{(\x-\theyearstart)*\unit}%
+				\draw[xshift=\xstop] (0,-.3\unit) -- (0,.3\unit);%
+				\ifflipped%
+					\node at (\xstop,0) [above=.2\unit] {\x};%
+				\else%
+					\node at (\xstop,0) [below=.2\unit] {\x};%
+				\fi%
+			}%
+}%
+\makeatother%
+\newcommand{\event}[3][e]{%
+	\pgfmathsetlength\xstop{(#2-\theyearstart)*\unit}%
+	\ifx #1e%
+		\ifflipped%
+			\draw[fill=black,draw=none,opacity=0.5]%
+				(\xstop, 0) circle (.2\unit)%
+				node[opacity=1,rotate=-45,right=.5\unit] {#3};%
+		\else%
+			\draw[fill=black,draw=none,opacity=0.5]%
+				(\xstop, 0) circle (.2\unit)%
+				node[opacity=1,rotate=45,right=.5\unit] {#3};%
+		\fi%
+	\else%
+		\pgfmathsetlength\xstart{(#1-\theyearstart)*\unit}%
+		\ifflipped%
+			\draw[fill=black,draw=none,opacity=0.5,rounded corners=.2\unit]%
+				(\xstart,-.2\unit) rectangle%
+				node[opacity=1,rotate=-45,right=.5\unit] {#3} (\xstop,.2\unit);%
+		\else%
+			\draw[fill=black,draw=none,opacity=0.5,rounded corners=.2\unit]%
+				(\xstart,-.2\unit) rectangle%
+				node[opacity=1,rotate=45,right=.5\unit] {#3} (\xstop,.2\unit);%
+		\fi%
+	\fi}%
+\newcommand{\decimaldate}[3]{(#1-1)/31/12+(#2-1)/12+#3}%
+\endinput%
+
