@@ -9,9 +9,12 @@
 \newsavebox{\timelinebox}%
 % Defining TikZ styles for labels and events
 \tikzset{%
-	,event/.style={fill=black,draw=none,opacity=0.5}
-	,eventlabel/.style={anchor=south west, opacity=1,yshift=.2\unit,rotate=45}
-	,flippedeventlabel/.style={anchor=north west, opacity=1,yshift=-.2\unit,rotate=-45}
+	,chronevent/.style={fill=black,draw=none,opacity=0.5}
+	,chronlabel/.style={opacity=1}
+	,chrontickslabel/.style={chronlabel}
+	,chroneventlabel/.style={chronlabel}
+	,eventlabel/.style={chroneventlabel,anchor=south west,yshift=.2\unit,rotate=45}
+	,flippedeventlabel/.style={chroneventlabel,anchor=north west,yshift=-.2\unit,rotate=-45}
 	}
 \makeatletter%
 \newif\ifchronology@star%
@@ -53,9 +56,9 @@
 				\pgfmathsetlength\xstop{(\x-\theyearstart)*\unit}%
 				\draw[xshift=\xstop] (0,-.3\unit) -- (0,.3\unit);%
 				\ifflipped%
-					\node at (\xstop,0) [above=.2\unit] {\x};%
+					\node[chrontickslabel] at (\xstop,0) [above=.2\unit] {\x};%
 				\else%
-					\node at (\xstop,0) [below=.2\unit] {\x};%
+					\node[chrontickslabel] at (\xstop,0) [below=.2\unit] {\x};%
 				\fi%
 			}%
 }%
@@ -64,22 +67,22 @@
 	\pgfmathsetlength\xstop{(#2-\theyearstart)*\unit}%
 	\ifx #1e%
 		\ifflipped%
-			\draw[event]%
+			\draw[chronevent]%
 			(\xstop, 0) circle (.2\unit)%
 			node[flippedeventlabel] {#3};%
 		\else%
-			\draw[event]%
+			\draw[chronevent]%
 			(\xstop, 0) circle (.2\unit)%
 			node[eventlabel] {#3};%
 		\fi%
 	\else%
 		\pgfmathsetlength\xstart{(#1-\theyearstart)*\unit}%
 		\ifflipped%
-			\draw[event,rounded corners=.2\unit]%
+			\draw[chronevent,rounded corners=.2\unit]%
 			(\xstart,-.2\unit) rectangle%
 			node[flippedeventlabel] {#3} (\xstop,.2\unit);%
 		\else%
-			\draw[event,rounded corners=.2\unit]%
+			\draw[chronevent,rounded corners=.2\unit]%
 			(\xstart,-.2\unit) rectangle%
 			node[eventlabel] {#3} (\xstop,.2\unit);%
 		\fi%
