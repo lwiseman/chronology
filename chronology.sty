@@ -16,6 +16,11 @@
 	,eventlabel/.style={chroneventlabel,anchor=south west,yshift=.2\unit,rotate=45}
 	,flippedeventlabel/.style={chroneventlabel,anchor=north west,yshift=-.2\unit,rotate=-45}
 	}
+% For compatibity with babel. handling of active characters in TikZ.
+\tikzset{
+	handle active characters in code,
+	handle active characters in nodes
+}
 \makeatletter%
 \newif\ifchronology@star%
 \newenvironment{chronology}{%
