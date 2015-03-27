@@ -7,6 +7,12 @@
 \newlength{\xstart}\newlength{\xstop}%
 \newlength{\unit}\newlength{\timelinewidth}%
 \newsavebox{\timelinebox}%
+% Defining TikZ styles for labels and events
+\tikzset{%
+	,event/.style={fill=black,draw=none,opacity=0.5}
+	,eventlabel/.style={anchor=south west, opacity=1,yshift=.2\unit,rotate=45}
+	,flippedeventlabel/.style={anchor=north west, opacity=1,yshift=-.2\unit,rotate=-45}
+	}
 \makeatletter%
 \newif\ifchronology@star%
 \newenvironment{chronology}{%
@@ -58,24 +64,24 @@
 	\pgfmathsetlength\xstop{(#2-\theyearstart)*\unit}%
 	\ifx #1e%
 		\ifflipped%
-			\draw[fill=black,draw=none,opacity=0.5]%
-				(\xstop, 0) circle (.2\unit)%
-				node[opacity=1,rotate=-45,right=.5\unit] {#3};%
+			\draw[event]%
+			(\xstop, 0) circle (.2\unit)%
+			node[flippedeventlabel] {#3};%
 		\else%
-			\draw[fill=black,draw=none,opacity=0.5]%
-				(\xstop, 0) circle (.2\unit)%
-				node[opacity=1,rotate=45,right=.5\unit] {#3};%
+			\draw[event]%
+			(\xstop, 0) circle (.2\unit)%
+			node[eventlabel] {#3};%
 		\fi%
 	\else%
 		\pgfmathsetlength\xstart{(#1-\theyearstart)*\unit}%
 		\ifflipped%
-			\draw[fill=black,draw=none,opacity=0.5,rounded corners=.2\unit]%
-				(\xstart,-.2\unit) rectangle%
-				node[opacity=1,rotate=-45,right=.5\unit] {#3} (\xstop,.2\unit);%
+			\draw[event,rounded corners=.2\unit]%
+			(\xstart,-.2\unit) rectangle%
+			node[flippedeventlabel] {#3} (\xstop,.2\unit);%
 		\else%
-			\draw[fill=black,draw=none,opacity=0.5,rounded corners=.2\unit]%
-				(\xstart,-.2\unit) rectangle%
-				node[opacity=1,rotate=45,right=.5\unit] {#3} (\xstop,.2\unit);%
+			\draw[event,rounded corners=.2\unit]%
+			(\xstart,-.2\unit) rectangle%
+			node[eventlabel] {#3} (\xstop,.2\unit);%
 		\fi%
 	\fi}%
 \newcommand{\decimaldate}[3]{(#1-1)/31/12+(#2-1)/12+#3}%
