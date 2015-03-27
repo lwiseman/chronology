@@ -2,6 +2,8 @@
 \ProvidesPackage{chronology}[2015/03/27 v1.1.1 Horizontal timeline]%
 \RequirePackage{calc}%
 \RequirePackage{tikz}%
+\RequirePackage{xparse}%
+% Defining counters and lengths
 \newcounter{step}\newcounter{stepstart}\newcounter{stepstop}%
 \newcounter{yearstart}\newcounter{yearstop}\newcounter{deltayears}%
 \newlength{\xstart}\newlength{\xstop}%
@@ -14,9 +16,9 @@
 	,chrontickslabel/.style={chronlabel}
 	,chroneventlabel/.style={chronlabel}
 	,eventlabel/.style={chroneventlabel,anchor=south west,yshift=.2\unit,rotate=45}
-	,flippedeventlabel/.style={chroneventlabel,anchor=north west,yshift=-.2\unit,rotate=-45}
+	,flippedeventlabel/.style={chroneventlabel,anchor=180,yshift=-.2\unit,rotate=-45}
 	}
-% For compatibity with babel. handling of active characters in TikZ.
+% For compatibity with babel. Handling of active characters in TikZ.
 \tikzset{
 	handle active characters in code,
 	handle active characters in nodes
@@ -68,9 +70,9 @@
 			}%
 }%
 \makeatother%
-\newcommand{\event}[3][e]{%
+\DeclareDocumentCommand \event {o m m}{%
 	\pgfmathsetlength\xstop{(#2-\theyearstart)*\unit}%
-	\ifx #1e%
+	\IfNoValueTF {#1} {%
 		\ifflipped%
 			\draw[chronevent]%
 			(\xstop, 0) circle (.2\unit)%
@@ -80,7 +82,7 @@
 			(\xstop, 0) circle (.2\unit)%
 			node[eventlabel] {#3};%
 		\fi%
-	\else%
+	}{%
 		\pgfmathsetlength\xstart{(#1-\theyearstart)*\unit}%
 		\ifflipped%
 			\draw[chronevent,rounded corners=.2\unit]%
@@ -91,7 +93,8 @@
 			(\xstart,-.2\unit) rectangle%
 			node[eventlabel] {#3} (\xstop,.2\unit);%
 		\fi%
-	\fi}%
+	}%
+}
 \newcommand{\decimaldate}[3]{(#1-1)/31/12+(#2-1)/12+#3}%
 \endinput%
 
