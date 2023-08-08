@@ -1,29 +1,104 @@
+% \section{User documentation}
+% \subsection{Example 1}
+% This output:\\
+% \begin{figure}[h]
+% \centering
+%\begin{chronology}[5]{1983}{2010}{10cm}[7cm]
+%\event{1984}{\color{blue}{one}}
+%\event[1985]{1986}{\small{two}}
+%\event{\decimaldate{25}{12}{2001}}{\huge{three}}
+%\end{chronology}
+%\end{figure}
+%
+% is produced by this input:
+%\begin{verbatim}
+%    \begin{chronology}[5]{1983}{2010}{10cm}[7cm]
+%        \event{1984}{\color{blue}{one}}
+%        \event[1985]{1986}{\small{two}}
+%        \event{\decimaldate{25}{12}{2001}}{\huge{three}}
+%    \end{chronology}
+%    \end{verbatim}
+%
+% \subsection{Example 2}
+%Similarly, this output:\\
+%\begin{figure}[h]
+% \centering
+%        \begin{chronology}*[5]{1983}{2010}{10cm}
+%            \event{1984}{\color{blue}{one}}
+%            \event[1985]{1986}{\small{two}}
+%            \event{\decimaldate{25}{12}{2001}}{\huge{three}}
+%        \end{chronology}
+%    \end{figure}
+%   
+%    Is produced by this input:\\
+%    
+%    \begin{verbatim}
+%        \begin{chronology}*[5]{1983}{2010}{10cm}
+%            \event{1984}{\color{blue}{one}}
+%            \event[1985]{1986}{\small{two}}
+%            \event{\decimaldate{25}{12}{2001}}{\huge{three}}
+%        \end{chronology}
+%    \end{verbatim}
+%
+% \subsection{Example 3}
+%And finally, this output:\\
+%\begin{figure}[h]
+%    \centering
+%    \begin{chronology}[5]{1983}{2010}{10cm}[13cm]
+%    \event{1984}{\color{blue}{one}}
+%    \event[1985]{1986}{\small{two}}
+%    \event{\decimaldate{25}{12}{2001}}{\huge{three}}
+%\end{chronology}
+%\end{figure}
+%
+% is produced by this input:
+%
+%\begin{verbatim}
+%    \begin{chronology}[5]{1983}{2010}{10cm}[13cm]
+%        \event{1984}{\color{blue}{one}}
+%        \event[1985]{1986}{\small{two}}
+%        \event{\decimaldate{25}{12}{2001}}{\huge{three}}
+%    \end{chronology}
+%\end{verbatim}
+%
+% \newpage
+% \section{Package macros}
+% \subsection{Standard package loading}
+%    \begin{macrocode}
 \NeedsTeXFormat{LaTeX2e}%
 \ProvidesPackage{chronology}[2015/03/27 v1.1.1 Horizontal timeline]%
 \RequirePackage{calc}%
 \RequirePackage{tikz}%
 \RequirePackage{xparse}%
-% Defining counters and lengths
+%    \end{macrocode}
+%
+% \subsection{Defining counters and lengths}
+%    \begin{macrocode}
 \newcounter{step}\newcounter{stepstart}\newcounter{stepstop}%
 \newcounter{yearstart}\newcounter{yearstop}\newcounter{deltayears}%
 \newlength{\xstart}\newlength{\xstop}%
 \newlength{\unit}\newlength{\timelinewidth}%
 \newsavebox{\timelinebox}%
-% Defining TikZ styles for labels and events
+%    \end{macrocode}
+% \subsection{Defining TikZ styles for labels and events}
+%    \begin{macrocode}
 \tikzset{%
 	,chronevent/.style={fill=black,draw=none,opacity=0.5}
 	,chronlabel/.style={opacity=1}
 	,chrontickslabel/.style={chronlabel}
 	,chroneventlabel/.style={chronlabel}
-	,eventlabel/.style={chroneventlabel,anchor=south west,yshift=.2\unit,rotate=45}
-	,flippedeventlabel/.style={chroneventlabel,anchor=north west,yshift=-.2\unit,rotate=-45}
+	,eventlabel/.style={chroneventlabel,anchor=south 
+	west,yshift=.2\unit,rotate=45}
+	,flippedeventlabel/.style={chroneventlabel,anchor=north 
+	west,yshift=-.2\unit,rotate=-45}
 	}
+%    \end{macrocode}
 % For compatibity with babel. Handling of active characters in TikZ.
+%    \begin{macrocode}
 \tikzset{
 	handle active characters in code,
 	handle active characters in nodes
 }
-\makeatletter%
 \newif\ifchronology@star%
 \newenvironment{chronology}{%
 	\@ifstar{\chronology@startrue\chronology@i*}{\chronology@starfalse\chronology@i*}%
@@ -69,8 +144,7 @@
 				\fi%
 			}%
 }%
-\makeatother%
-\DeclareDocumentCommand \event {o m m}{%
+    \DeclareDocumentCommand \event {o m m}{%
 	\pgfmathsetlength\xstop{(#2-\theyearstart)*\unit}%
 	\IfNoValueTF {#1} {%
 		\ifflipped%
@@ -96,5 +170,8 @@
 	}%
 }
 \newcommand{\decimaldate}[3]{(#1-1)/31/12+(#2-1)/12+#3}%
+%    \end{macrocode}
+%     \newpage
+%    \PrintIndex  
 \endinput%
 

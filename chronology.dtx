@@ -1,0 +1,32 @@
+% !TeX TS-program = xelatex
+%<*driver>
+% incremental translation style documentation driver file
+% compile this with XeLaTeX
+\documentclass[12pt]{article}
+\usepackage{doc,
+    hyperref, 
+    polyglossia,
+    chronology
+}
+%
+\CodelineIndex
+%\PageIndex
+%\RecordChanges
+%
+\setlength\hfuzz{15pt}
+\hbadness = 7000
+
+\author{Ben Armacost \and Levi Wiseman \and documentation updated by 
+Dominik Wujastyk}
+\title{\LaTeX\ style file for drawing horizontal timelines}
+\date{\today }
+
+\begin{document}
+    \sloppypar
+    \maketitle
+    \tableofcontents
+    \newpage
+    \DocInput {chronology.sty}
+\end{document}
+% say “makeindex -s gind.ist <filename>” to get the index right
+%</driver>
